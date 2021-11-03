@@ -1,6 +1,12 @@
 package clothing.management.app.gui;
 
 import javax.swing.*;
+
+import com.mongodb.reactivestreams.client.MongoClient;
+import com.mongodb.reactivestreams.client.MongoClients;
+
+import clothing.management.dao.HoaDonDao;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,8 +35,11 @@ public class GiaoDienDieuKhien extends JFrame {
     private JTextField txtMaNhanVien;
     private JTextField txtHoTen;
     private JTextField txtCMND;
+    
+    private MongoClient client =  MongoClients.create();
+    private HoaDonDao hoaDonDao = new HoaDonDao(client);
 
-    public GiaoDienDieuKhien() {
+    public GiaoDienDieuKhien() throws InterruptedException {
 
         pnlChinh = new JPanel();
         pnlThongTinNhanVien = new JPanel();
@@ -122,7 +131,7 @@ public class GiaoDienDieuKhien extends JFrame {
 
         lblSoTongHoaDon.setFont(new Font("Tahoma", 0, 24));
         lblSoTongHoaDon.setHorizontalAlignment(SwingConstants.CENTER);
-        lblSoTongHoaDon.setText("0 Đơn");
+        lblSoTongHoaDon.setText( Long.toString(hoaDonDao.layTongSoHoaDon()) + " Đơn");
 
         lblSoDoanhThu.setFont(new Font("Tahoma", 0, 24));
         lblSoDoanhThu.setHorizontalAlignment(SwingConstants.CENTER);
@@ -214,7 +223,12 @@ public class GiaoDienDieuKhien extends JFrame {
         btnQuanLyHoaDon.setText("Quản Lý Hóa Đơn");
         btnQuanLyHoaDon.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                btnQuanLyHoaDonActionPerformed(evt);
+                try {
+					btnQuanLyHoaDonActionPerformed(evt);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         });
 
@@ -304,7 +318,7 @@ public class GiaoDienDieuKhien extends JFrame {
     }
 
     private void btnDangXuatActionPerformed(ActionEvent evt) {
-        new gui.GiaoDienDangNhap().setVisible(true);
+        new GiaoDienDangNhap().setVisible(true);
         setVisible(false);
     }
 
@@ -323,7 +337,7 @@ public class GiaoDienDieuKhien extends JFrame {
         setVisible(false);
     }
 
-    private void btnQuanLyHoaDonActionPerformed(ActionEvent evt) {
+    private void btnQuanLyHoaDonActionPerformed(ActionEvent evt) throws InterruptedException {
         new GiaoDienQuanLyHoaDon().setVisible(true);
         setVisible(false);
     }

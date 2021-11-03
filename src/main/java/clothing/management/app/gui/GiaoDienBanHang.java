@@ -77,10 +77,17 @@ public class GiaoDienBanHang extends JFrame {
         pnlDangXuat.setLayout(new FlowLayout(FlowLayout.LEFT));
         pnlDangXuat.setPreferredSize(new Dimension(95, 40));
         btnDangXuat = new JButton("Đăng Xuất");
-        btnDangXuat.addActionListener(evt -> btnDangXuatActionPerformed(evt));
+        btnDangXuat.addActionListener(evt -> {
+			try {
+				btnDangXuatActionPerformed(evt);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
         pnlDangXuat.add(btnDangXuat);
         pnlBanHang = new JPanel();
-        pnlBanHang.setPreferredSize(new Dimension(1400, 40));
+        pnlBanHang.setPreferredSize(new Dimension(1000, 40));
         JLabel lblHeader = new JLabel("BÁN HÀNG");
         lblHeader.setFont(new Font("Arial", Font.BOLD, 25));
         pnlBanHang.add(lblHeader);
@@ -99,7 +106,7 @@ public class GiaoDienBanHang extends JFrame {
 
         pnlCenterRight = new JPanel();
         pnlCenterRight.setBorder(BorderFactory.createTitledBorder("Khách Hàng"));
-        pnlCenterRight.setPreferredSize(new Dimension(750, 295));
+        pnlCenterRight.setPreferredSize(new Dimension(500, 295));
         pnlCenterRight.setLayout(new GridLayout(10, 1));
 //Vùng các textField & label
 //	
@@ -143,7 +150,7 @@ public class GiaoDienBanHang extends JFrame {
         pnlR2.add(txtMKH);
 //****************************************************************
         pnlR3 = new JPanel();
-        pnlR3.setPreferredSize(new Dimension(770, pnlR3.HEIGHT));
+        pnlR3.setPreferredSize(new Dimension(500, pnlR3.HEIGHT));
         pnlR3.setLayout(new FlowLayout(FlowLayout.LEFT));
         pnlR3.add(lblHT);
         pnlR3.add(txtHT);
@@ -214,9 +221,9 @@ public class GiaoDienBanHang extends JFrame {
         pnlCenter.add(pnlCenterLeftCN, BorderLayout.SOUTH);
 //**********************************************************************
         pnlSouth = new JPanel();
-        pnlSouth.setPreferredSize(new Dimension(1500, 430));
+        pnlSouth.setPreferredSize(new Dimension(1300, 430));
         pnlBang = new JPanel();
-        pnlBang.setPreferredSize(new Dimension(1530, 300));
+        pnlBang.setPreferredSize(new Dimension(1300, 300));
         pnlBang.setBorder(BorderFactory.createTitledBorder("Danh sách sản phẩm"));
         pnlBang.setLayout(new BoxLayout(pnlBang, BoxLayout.PAGE_AXIS));
         String[] cols = {"STT", "Mã sản phẩm", "Tên sản phẩm", "Loại sản phẩm", "Nhà cung cấp", "Kích cỡ", "Số lượng",
@@ -255,7 +262,14 @@ public class GiaoDienBanHang extends JFrame {
         btnXoaSP.setPreferredSize(new DimensionUIResource(150, 30));
         btnQLKH.setPreferredSize(new DimensionUIResource(200, 30));
         btnLHD.setPreferredSize(new DimensionUIResource(150, 30));
-        btnLHD.addActionListener(evt -> btnLHDActionPerformed(evt));
+        btnLHD.addActionListener(evt -> {
+			try {
+				btnLHDActionPerformed(evt);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 
         pnlTungChucNang.add(txtTMHD);
         pnlTungChucNang.add(btnTKMaHD);
@@ -275,12 +289,12 @@ public class GiaoDienBanHang extends JFrame {
 
     }
 
-    private void btnLHDActionPerformed(ActionEvent evt) {
-        new GiaoDienHoaDon().setVisible(true);
+    private void btnLHDActionPerformed(ActionEvent evt) throws InterruptedException {
+        new GiaoDienHoaDon("").setVisible(true);
         setVisible(false);
     }
 
-    private void btnDangXuatActionPerformed(ActionEvent evt) {
+    private void btnDangXuatActionPerformed(ActionEvent evt) throws InterruptedException {
         new GiaoDienDieuKhien().setVisible(true);
         setVisible(false);
     }
