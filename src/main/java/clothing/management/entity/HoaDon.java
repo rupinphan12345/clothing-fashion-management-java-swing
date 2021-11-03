@@ -38,7 +38,7 @@ public class HoaDon {
         setNgayTao(ngayTao);
         setGiamGia(giamGia);
         setDanhSachChiTietHoaDon(danhSachChiTietHoaDon);
-        this.tongTienHoaDon = this.danhSachChiTietHoaDon.stream().mapToDouble(ChiTietHoaDon::getThanhTien).sum();
+        this.tongTienHoaDon = this.danhSachChiTietHoaDon.stream().mapToDouble(ChiTietHoaDon::getThanhTien).sum() * ((100 - this.giamGia)/100);
     }
 
     public String getMaHoaDon() {
