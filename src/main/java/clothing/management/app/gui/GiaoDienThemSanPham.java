@@ -1,4 +1,4 @@
-package gui;
+package clothing.management.app.gui;
 
 
 import clothing.management.app.gui.GiaoDienQuanLySanPham;

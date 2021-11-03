@@ -51,7 +51,12 @@ public class GiaoDienQuanLyNhaCungCap extends JFrame {
         btnBack.setFont(new Font("Arial", Font.BOLD, 20));
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                btnBackActionPerformed(evt);
+                try {
+					btnBackActionPerformed(evt);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         });
         head.add(btnBack);
@@ -121,7 +126,7 @@ public class GiaoDienQuanLyNhaCungCap extends JFrame {
 
     }
 
-    private void btnBackActionPerformed(ActionEvent evt) {
+    private void btnBackActionPerformed(ActionEvent evt) throws InterruptedException {
         new GiaoDienDieuKhien().setVisible(true);
         setVisible(false);
     }
