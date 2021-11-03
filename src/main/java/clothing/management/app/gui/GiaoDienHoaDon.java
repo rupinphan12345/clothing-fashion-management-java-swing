@@ -2,9 +2,22 @@ package clothing.management.app.gui;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
+import com.mongodb.reactivestreams.client.MongoClient;
+import com.mongodb.reactivestreams.client.MongoClients;
+
+import clothing.management.dao.HoaDonDao;
+import clothing.management.dao.KhachHangDao;
+import clothing.management.dao.SanPhamDao;
+import clothing.management.entity.ChiTietHoaDon;
+import clothing.management.entity.HoaDon;
+import clothing.management.entity.KhachHang;
+import clothing.management.entity.SanPham;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class GiaoDienHoaDon extends JFrame {
     private JPanel pnlNorth;
@@ -20,8 +33,13 @@ public class GiaoDienHoaDon extends JFrame {
 
     private JTable table;
     private DefaultTableModel model;
+    
+    MongoClient client = MongoClients.create();
+    HoaDonDao hoaDonDao = new HoaDonDao(client);
+    KhachHangDao khachHangDao = new KhachHangDao(client);
+    SanPhamDao sanPhamDao = new SanPhamDao(client);
 
-    public GiaoDienHoaDon() {
+    public GiaoDienHoaDon(String maHoaDon) throws InterruptedException {
         setTitle("Của Hàng Thời Trang AM2");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setUndecorated(false);
@@ -108,6 +126,33 @@ public class GiaoDienHoaDon extends JFrame {
         JPanel pnlTemp = new JPanel(new BorderLayout());
         pnlTemp.add(btnThoat, BorderLayout.EAST);
         pnlSouth.add(pnlTemp, BorderLayout.SOUTH);
+        
+        
+        List<HoaDon> hoaDon = hoaDonDao.timHoaDon("maHoaDon", maHoaDon);
+        
+        List<KhachHang> khachHang = khachHangDao.timKhachHangTheoMa(hoaDon.get(0).getKhachHang().getMaKhachHang());
+        
+        txtMaHoaDon.setText(hoaDon.get(0).getMaHoaDon());
+        txtNgayLap.setText(hoaDon.get(0).getNgayTao().toString());
+        txtKhachHang.setText(khachHang.get(0).getHoTen());
+        txtSoDienThoai.setText(khachHang.get(0).getSoDienThoai());
+        txtThanhTien.setText(Double.toString(hoaDon.get(0).getTongTienHoaDon()));
+        int STT = 1;
+        for (ChiTietHoaDon chiTietHoaDon : hoaDon.get(0).getDanhSachChiTietHoaDon()) {
+        	
+        	List<SanPham> sanPham = sanPhamDao.timSanPhamTheoTieuChi("maSanPham", chiTietHoaDon.getSanPham().getMaSanPham());
+     
+        	model.addRow(new Object[] {
+        		STT,
+        		chiTietHoaDon.getSanPham().getMaSanPham(),
+        		sanPham.get(0).getTenSanPham(),
+        		"cai",
+        		chiTietHoaDon.getSoLuong(),
+        		chiTietHoaDon.getDonGia(),
+        		chiTietHoaDon.getThanhTien()
+        	});
+        	STT ++;
+        }
 
     }
 

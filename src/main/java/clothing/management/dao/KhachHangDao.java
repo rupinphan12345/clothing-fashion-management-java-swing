@@ -167,13 +167,18 @@ public class KhachHangDao extends AbstractDao {
     }
 
     //	db.danhsachkhachhang.createIndex({hoTen: "text"})
+//    db.danhsachkhachhang.aggregate([{$match: {$expr: {$eq: ["$maKhachHang", "KH00001"]}}}, 
+//    								{$project:{_id:0,maKhachHang:1,hoTen:1,soDienThoai:1,gioiTinh:1,email:1,nam:{$year:"$ngaySinh"},thang:{$month:"$ngaySinh"},ngay:{$dayOfMonth:"$ngaySinh"}}}])
     public List<KhachHang> timKhachHangTheoTen(String tuKhoa) throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
         List<KhachHang> DSKhachHang = new ArrayList<>();
         createIndex();
+        Document doc = Document.parse("{$project:{_id:0,maKhachHang:1,hoTen:1,soDienThoai:1,gioiTinh:1,email:1,nam:{$year:\"$ngaySinh\"},thang:{$month:\"$ngaySinh\"},ngay:{$dayOfMonth:\"$ngaySinh\"}}}");
 
         khachHangCollection
-                .find(Filters.text(tuKhoa))
+        .aggregate(Arrays.asList(
+        		Document.parse("{$match: {$expr: {$eq: [\"$hoTen\", \""+tuKhoa+"\"]}}}"),
+        		Document.parse("{$project:{_id:0,maKhachHang:1,hoTen:1,soDienThoai:1,gioiTinh:1,email:1,nam:{$year:\"$ngaySinh\"},thang:{$month:\"$ngaySinh\"},ngay:{$dayOfMonth:\"$ngaySinh\"}}}")))
                 .subscribe(new Subscriber<Document>() {
                     private Subscription s;
 
@@ -185,9 +190,11 @@ public class KhachHangDao extends AbstractDao {
 
                     @Override
                     public void onNext(Document t) {
+                    	t.remove("ngaySinh");
                         String json = t.toJson();
                         KhachHang khachHang = GSON.fromJson(json, KhachHang.class);
-
+                        Date date1 = new Date(t.getInteger("nam") - 1900, t.getInteger("thang"), t.getInteger("ngay") + 1, 1 - 10, 40, 30);
+                        khachHang.setNgaySinh(date1);
                         DSKhachHang.add(khachHang);
                         this.s.request(1);
                     }
@@ -214,7 +221,9 @@ public class KhachHangDao extends AbstractDao {
         createIndex();
 
         khachHangCollection
-                .find(Filters.text(soDienThoai))
+        .aggregate(Arrays.asList(
+        		Document.parse("{$match: {$expr: {$eq: [\"$soDienThoai\", \""+soDienThoai+"\"]}}}"),
+        		Document.parse("{$project:{_id:0,maKhachHang:1,hoTen:1,soDienThoai:1,gioiTinh:1,email:1,nam:{$year:\"$ngaySinh\"},thang:{$month:\"$ngaySinh\"},ngay:{$dayOfMonth:\"$ngaySinh\"}}}")))
                 .subscribe(new Subscriber<Document>() {
 
                     private Subscription s;
@@ -227,9 +236,55 @@ public class KhachHangDao extends AbstractDao {
 
                     @Override
                     public void onNext(Document t) {
+                    	t.remove("ngaySinh");
                         String json = t.toJson();
                         KhachHang khachHang = GSON.fromJson(json, KhachHang.class);
+                        Date date1 = new Date(t.getInteger("nam") - 1900, t.getInteger("thang"), t.getInteger("ngay") + 1, 1 - 10, 40, 30);
+                        khachHang.setNgaySinh(date1);
+                        DSKhachHang.add(khachHang);
+                        this.s.request(1);
+                    }
 
+                    @Override
+                    public void onError(Throwable t) {
+                        t.printStackTrace();
+                        onComplete();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        latch.countDown();
+                    }
+                });
+        latch.await();
+        return DSKhachHang;
+    }
+    
+    public List<KhachHang> timKhachHangTheoMa(String maKH) throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
+        List<KhachHang> DSKhachHang = new ArrayList<>();
+
+        khachHangCollection
+        .aggregate(Arrays.asList(
+        		Document.parse("{$match: {$expr: {$eq: [\"$maKhachHang\", \""+maKH+"\"]}}}"),
+        		Document.parse("{$project:{_id:0,maKhachHang:1,hoTen:1,soDienThoai:1,gioiTinh:1,email:1,nam:{$year:\"$ngaySinh\"},thang:{$month:\"$ngaySinh\"},ngay:{$dayOfMonth:\"$ngaySinh\"}}}")))
+                .subscribe(new Subscriber<Document>() {
+
+                    private Subscription s;
+
+                    @Override
+                    public void onSubscribe(Subscription s) {
+                        this.s = s;
+                        this.s.request(1);
+                    }
+
+                    @Override
+                    public void onNext(Document t) {
+                    	t.remove("ngaySinh");
+                        String json = t.toJson();
+                        KhachHang khachHang = GSON.fromJson(json, KhachHang.class);
+                        Date date1 = new Date(t.getInteger("nam") - 1900, t.getInteger("thang"), t.getInteger("ngay") + 1, 1 - 10, 40, 30);
+                        khachHang.setNgaySinh(date1);
                         DSKhachHang.add(khachHang);
                         this.s.request(1);
                     }

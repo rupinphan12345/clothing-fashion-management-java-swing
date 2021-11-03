@@ -12,6 +12,11 @@ public class ChiTietHoaDon {
         setDonGia(donGia);
         this.thanhTien = this.soLuong * this.donGia;
     }
+    
+    public ChiTietHoaDon() {
+		// TODO Auto-generated constructor stub
+    	this.thanhTien = this.soLuong * this.donGia;
+	}
 
     public SanPham getSanPham() {
         return sanPham;
@@ -22,6 +27,7 @@ public class ChiTietHoaDon {
     }
 
     public int getSoLuong() {
+    	
         return soLuong;
     }
 
@@ -44,7 +50,7 @@ public class ChiTietHoaDon {
     @Override
     public String toString() {
         return "ChiTietHoaDon{" +
-                "sanPham=" + sanPham +
+                "sanPham=" + sanPham.getMaSanPham() +
                 ", soLuong=" + soLuong +
                 ", donGia=" + donGia +
                 ", thanhTien=" + thanhTien +

@@ -1,11 +1,11 @@
 package clothing.management.app.gui;
 
-import clothing.management.dao.TaiKhoanDao;
-import com.mongodb.reactivestreams.client.MongoClients;
+import clothing.management.app.gui.GiaoDienDieuKhien;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 
 public class GiaoDienDangNhap extends JFrame {
 
@@ -20,9 +20,9 @@ public class GiaoDienDangNhap extends JFrame {
     private JPasswordField txtMatKhau;
     private JTextField txtTaiKhoan;
 
-    private TaiKhoanDao taiKhoanDao;
-
     public GiaoDienDangNhap() {
+
+
         pnlChinh = new JPanel();
         pnlBot = new JPanel();
         btnDangNhap = new JButton();
@@ -34,7 +34,7 @@ public class GiaoDienDangNhap extends JFrame {
         pnlTop = new JPanel();
         lblLogo = new JLabel();
 
-        setTitle("Đăng Nhập");
+        setTitle("�?ăng Nhập");
         setSize(550, 360);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setUndecorated(false);
@@ -47,10 +47,15 @@ public class GiaoDienDangNhap extends JFrame {
 
         lblMatKhau.setText("Mật Khẩu:");
 
-        btnDangNhap.setText("Đăng Nhập");
+        btnDangNhap.setText("�?ăng Nhập");
         btnDangNhap.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                btnDangNhapActionPerformed(evt);
+                try {
+					btnDangNhapActionPerformed(evt);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         });
 
@@ -158,7 +163,7 @@ public class GiaoDienDangNhap extends JFrame {
                                 .addComponent(lblLogo, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        taiKhoanDao = new TaiKhoanDao(MongoClients.create());
+
     }
 
     private void btnThoatActionPerformed(ActionEvent evt) {
@@ -168,25 +173,10 @@ public class GiaoDienDangNhap extends JFrame {
         }
     }
 
-    private void btnDangNhapActionPerformed(ActionEvent evt) {
-        String tenDangNhap = txtTaiKhoan.getText();
-        String matKhau = String.valueOf(txtMatKhau.getPassword());
-
-        if (tenDangNhap.isEmpty() || matKhau.isEmpty()) {
-            JOptionPane.showMessageDialog(pnlChinh, "Tên đăng nhập hoặc mật khẩu không hợp lệ");
-            txtTaiKhoan.requestFocus();
-            return;
-        }
-        try {
-            if (taiKhoanDao.dangNhap(tenDangNhap, matKhau)) {
-                setVisible(false);
-                new GiaoDienDieuKhien().setVisible(true);
-                return;
-            }
-            JOptionPane.showMessageDialog(pnlChinh, "Sai mật khẩu hoặc tên đăng nhập");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(pnlChinh, "Lỗi");
-        }
+    private void btnDangNhapActionPerformed(ActionEvent evt) throws InterruptedException {
+        new GiaoDienDieuKhien().setVisible(true);
+        setVisible(false);
     }
+
+
 }
