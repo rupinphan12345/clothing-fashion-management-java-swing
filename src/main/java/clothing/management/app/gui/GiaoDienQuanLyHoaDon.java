@@ -3,11 +3,22 @@ package clothing.management.app.gui;
 import javax.swing.*;
 import javax.swing.plaf.DimensionUIResource;
 import javax.swing.table.DefaultTableModel;
+
+import com.mongodb.reactivestreams.client.MongoClient;
+import com.mongodb.reactivestreams.client.MongoClients;
+
+import clothing.management.dao.HoaDonDao;
+import clothing.management.dao.KhachHangDao;
+import clothing.management.entity.HoaDon;
+import clothing.management.entity.KhachHang;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.List;
 
-public class GiaoDienQuanLyHoaDon extends JFrame {
+public class GiaoDienQuanLyHoaDon extends JFrame implements ActionListener{
 
     /**
      *
@@ -29,8 +40,12 @@ public class GiaoDienQuanLyHoaDon extends JFrame {
     //    private JButton btnUpdate;
     private JButton btnDelete;
     private JButton btnSelect;
+    
+    private MongoClient client = MongoClients.create();
+    private HoaDonDao hoaDonDao = new HoaDonDao(client);
+    private KhachHangDao khachHangDao = new KhachHangDao(client);
 
-    public GiaoDienQuanLyHoaDon() {
+    public GiaoDienQuanLyHoaDon() throws InterruptedException {
         this.setTitle("Giao Diện Quản Lý Hóa Đơn");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -40,7 +55,7 @@ public class GiaoDienQuanLyHoaDon extends JFrame {
         createGUI();
     }
 
-    private void createGUI() {
+    private void createGUI() throws InterruptedException {
         JPanel header, panelWest, panelSouth, panelCenter, panelCenterCenter;
 
 
@@ -54,13 +69,18 @@ public class GiaoDienQuanLyHoaDon extends JFrame {
         btnBack.setFont(new Font("Arial", Font.BOLD, 20));
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                btnBackActionPerformed(evt);
+                try {
+					btnBackActionPerformed(evt);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         });
         head.add(btnBack);
         header = new JPanel();
         header.setLayout(new FlowLayout(FlowLayout.CENTER));
-        header.setPreferredSize(new Dimension(1350, 90));
+        header.setPreferredSize(new Dimension(1000, 90));
         JLabel lblHeader = new JLabel("Quản Lý Hóa Đơn");
         lblHeader.setFont(new Font("Arial", Font.BOLD, 70));
         header.add(lblHeader);
@@ -82,6 +102,24 @@ public class GiaoDienQuanLyHoaDon extends JFrame {
         //setsize for table
         scroll.setPreferredSize(new DimensionUIResource(1400, 600));
         pn2.add(scroll);
+        
+        
+//thêm dữ liệu vào bảng
+        List<HoaDon> DSHoaDon = hoaDonDao.getAllListBill();
+        
+        for(HoaDon hoaDon : DSHoaDon) {
+        	List<KhachHang> SDTKhachHang = khachHangDao.timKhachHangTheoMa(hoaDon.getKhachHang().getMaKhachHang());
+        	dtm.addRow(new Object[] {
+        			hoaDon.getMaHoaDon(),
+        			hoaDon.getNgayTao(),
+        			hoaDon.getNhanVien().getMaNhanVien(),
+        			SDTKhachHang.get(0).getSoDienThoai(),
+//        			hoaDon.getKhachHang().getMaKhachHang(),
+        			hoaDonDao.laySoLuongSanPhamTheoMaHoaDon(hoaDon.getMaHoaDon()),
+        			hoaDon.getGiamGia(),
+        			hoaDon.getTongTienHoaDon()
+        	});
+        }
 
 // code function
         pn3 = new JPanel();
@@ -96,6 +134,7 @@ public class GiaoDienQuanLyHoaDon extends JFrame {
         cboFind.addItem("Tìm theo mã khách hàng");
         cboFind.addItem("Tìm theo mã hóa đơn");
         cboFind.addItem("Tìm theo mã nhân viên");
+        
         txtFind = new JTextField(20);
         JLabel lbFind = new JLabel("Tìm Kiếm theo:");
         btnFind = new JButton("Tìm Kiếm");
@@ -108,6 +147,7 @@ public class GiaoDienQuanLyHoaDon extends JFrame {
         btnPrint = new JButton("Kết Xuất");
         btnSelect = new JButton("Xem Chi Tiết");
 
+        System.out.println(cboFind.getInputContext());
 
         lbFind.setPreferredSize(new DimensionUIResource(100, 40));
         txtFind.setPreferredSize(new DimensionUIResource(100, 40));
@@ -127,10 +167,154 @@ public class GiaoDienQuanLyHoaDon extends JFrame {
         this.add(pn1, BorderLayout.NORTH);
         this.add(pn2, BorderLayout.CENTER);
         this.add(pn3, BorderLayout.SOUTH);
+        
+        btnSelect.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					btnSelectPerfromed(e);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+        btnFind.addActionListener(this);
+        
     }
 
-    private void btnBackActionPerformed(ActionEvent evt) {
+    private void btnBackActionPerformed(ActionEvent evt) throws InterruptedException {
         new GiaoDienDieuKhien().setVisible(true);
         setVisible(false);
     }
+    
+    private void btnSelectPerfromed(ActionEvent evt) throws InterruptedException {
+    	int row = table.getSelectedRow();
+    	String maHoaDon = "";
+		if(row != -1) {
+			maHoaDon = table.getValueAt(row, 0).toString();
+			
+		}
+    	new GiaoDienHoaDon(maHoaDon).setVisible(true);
+    	setVisible(false);
+    }
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object o = e.getSource();
+		if (o.equals(btnFind)) {
+			try {
+				xuLyTimKiem();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
+	}
+	
+	private void xuLyXemChiTietHoaDon () {
+		int row = table.getSelectedRow();
+		if(row != -1) {
+			String maHoaDon = table.getValueAt(row, 0).toString();
+			
+		}
+	}
+	
+	private void xuLyTimKiem () throws InterruptedException {
+		int select = cboFind.getSelectedIndex();
+		switch(select) {
+		
+			case 0: {
+				List<HoaDon> DSHoaDon = hoaDonDao.getAllListBill();
+//				DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+				dtm.setRowCount(0);
+		        for(HoaDon hoaDon : DSHoaDon) {
+		        	List<KhachHang> SDTKhachHang = khachHangDao.timKhachHangTheoMa(hoaDon.getKhachHang().getMaKhachHang());
+		        	dtm.addRow(new Object[] {
+		        			hoaDon.getMaHoaDon(),
+		        			hoaDon.getNgayTao(),
+		        			hoaDon.getNhanVien().getMaNhanVien(),
+		        			SDTKhachHang.get(0).getSoDienThoai(),
+		        			5,
+		        			hoaDon.getGiamGia(),
+		        			hoaDon.getTongTienHoaDon()
+		        	});
+		        }
+		        
+		        break;
+			}
+		
+			case 1: {
+				String maKhachHang = txtFind.getText();
+				
+				List<HoaDon> DSHoaDon = hoaDonDao.timHoaDon("maKhachHang", maKhachHang);
+//				DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+				dtm.setRowCount(0);
+				
+				for(HoaDon hoaDon : DSHoaDon) {
+		        	List<KhachHang> SDTKhachHang = khachHangDao.timKhachHangTheoMa(hoaDon.getKhachHang().getMaKhachHang());
+		        	dtm.addRow(new Object[] {
+		        			hoaDon.getMaHoaDon(),
+		        			hoaDon.getNgayTao(),
+		        			hoaDon.getNhanVien().getMaNhanVien(),
+		        			SDTKhachHang.get(0).getSoDienThoai(),
+		        			5,
+		        			hoaDon.getGiamGia(),
+		        			hoaDon.getTongTienHoaDon()
+		        	});
+		        }
+				
+				break;
+				
+			}
+			
+			case 2: {
+				String maHoaDon = txtFind.getText();
+				
+				List<HoaDon> DSHoaDon = hoaDonDao.timHoaDon("maHoaDon", maHoaDon);
+//				DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+				dtm.setRowCount(0);
+				
+				for(HoaDon hoaDon : DSHoaDon) {
+		        	List<KhachHang> SDTKhachHang = khachHangDao.timKhachHangTheoMa(hoaDon.getKhachHang().getMaKhachHang());
+		        	dtm.addRow(new Object[] {
+		        			hoaDon.getMaHoaDon(),
+		        			hoaDon.getNgayTao(),
+		        			hoaDon.getNhanVien().getMaNhanVien(),
+		        			SDTKhachHang.get(0).getSoDienThoai(),
+		        			5,
+		        			hoaDon.getGiamGia(),
+		        			hoaDon.getTongTienHoaDon()
+		        	});
+		        }
+				
+				break;
+			}
+			
+			case 3: {
+				String maNhanVien = txtFind.getText();
+				
+				List<HoaDon> DSHoaDon = hoaDonDao.timHoaDon("maNhanVien", maNhanVien);
+//				DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+				dtm.setRowCount(0);
+				
+				for(HoaDon hoaDon : DSHoaDon) {
+		        	List<KhachHang> SDTKhachHang = khachHangDao.timKhachHangTheoMa(hoaDon.getKhachHang().getMaKhachHang());
+		        	dtm.addRow(new Object[] {
+		        			hoaDon.getMaHoaDon(),
+		        			hoaDon.getNgayTao(),
+		        			hoaDon.getNhanVien().getMaNhanVien(),
+		        			SDTKhachHang.get(0).getSoDienThoai(),
+		        			5,
+		        			hoaDon.getGiamGia(),
+		        			hoaDon.getTongTienHoaDon()
+		        	});
+		        }
+				
+				break;
+			}
+		}
+	}
 }
