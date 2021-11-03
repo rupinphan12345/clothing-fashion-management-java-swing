@@ -191,7 +191,12 @@ public class GiaoDienDieuKhien extends JFrame {
         btnQuanLySanPham.setText("Quản Lý Sản Phẩm");
         btnQuanLySanPham.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                btnQuanLySanPhamActionPerformed(evt);
+                try {
+					btnQuanLySanPhamActionPerformed(evt);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         });
 
@@ -199,7 +204,12 @@ public class GiaoDienDieuKhien extends JFrame {
         btnQuanLyKhachHang.setText("Quản Lý Khách Hàng");
         btnQuanLyKhachHang.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                btnQuanLyKhachHangActionPerformed(evt);
+                try {
+					btnQuanLyKhachHangActionPerformed(evt);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         });
 
@@ -332,7 +342,7 @@ public class GiaoDienDieuKhien extends JFrame {
         setVisible(false);
     }
 
-    private void btnQuanLySanPhamActionPerformed(ActionEvent evt) {
+    private void btnQuanLySanPhamActionPerformed(ActionEvent evt) throws InterruptedException {
         new GiaoDienQuanLySanPham().setVisible(true);
         setVisible(false);
     }
@@ -347,7 +357,7 @@ public class GiaoDienDieuKhien extends JFrame {
         setVisible(false);
     }
 
-    private void btnQuanLyKhachHangActionPerformed(ActionEvent evt) {
+    private void btnQuanLyKhachHangActionPerformed(ActionEvent evt) throws InterruptedException {
         new GiaoDienQuanLyKhachHang().setVisible(true);
         setVisible(false);
     }

@@ -34,7 +34,7 @@ public class GiaoDienDangNhap extends JFrame {
         pnlTop = new JPanel();
         lblLogo = new JLabel();
 
-        setTitle("ﾄ斉ハg Nh蘯ｭp");
+        setTitle("ﾄ?ﾄハg Nh蘯ｭp");
         setSize(550, 360);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setUndecorated(false);
@@ -47,7 +47,7 @@ public class GiaoDienDangNhap extends JFrame {
 
         lblMatKhau.setText("M蘯ｭt Kh蘯ｩu:");
 
-        btnDangNhap.setText("ﾄ斉ハg Nh蘯ｭp");
+        btnDangNhap.setText("ﾄ?ﾄハg Nh蘯ｭp");
         btnDangNhap.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 try {

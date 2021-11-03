@@ -237,7 +237,7 @@ public class GiaoDienQuanLyHoaDon extends JFrame implements ActionListener{
 		        			hoaDon.getNgayTao(),
 		        			hoaDon.getNhanVien().getMaNhanVien(),
 		        			SDTKhachHang.get(0).getSoDienThoai(),
-		        			5,
+		        			hoaDonDao.laySoLuongSanPhamTheoMaHoaDon(hoaDon.getMaHoaDon()),
 		        			hoaDon.getGiamGia(),
 		        			hoaDon.getTongTienHoaDon()
 		        	});
@@ -260,7 +260,7 @@ public class GiaoDienQuanLyHoaDon extends JFrame implements ActionListener{
 		        			hoaDon.getNgayTao(),
 		        			hoaDon.getNhanVien().getMaNhanVien(),
 		        			SDTKhachHang.get(0).getSoDienThoai(),
-		        			5,
+		        			hoaDonDao.laySoLuongSanPhamTheoMaHoaDon(hoaDon.getMaHoaDon()),
 		        			hoaDon.getGiamGia(),
 		        			hoaDon.getTongTienHoaDon()
 		        	});
@@ -284,7 +284,7 @@ public class GiaoDienQuanLyHoaDon extends JFrame implements ActionListener{
 		        			hoaDon.getNgayTao(),
 		        			hoaDon.getNhanVien().getMaNhanVien(),
 		        			SDTKhachHang.get(0).getSoDienThoai(),
-		        			5,
+		        			hoaDonDao.laySoLuongSanPhamTheoMaHoaDon(hoaDon.getMaHoaDon()),
 		        			hoaDon.getGiamGia(),
 		        			hoaDon.getTongTienHoaDon()
 		        	});
@@ -307,7 +307,7 @@ public class GiaoDienQuanLyHoaDon extends JFrame implements ActionListener{
 		        			hoaDon.getNgayTao(),
 		        			hoaDon.getNhanVien().getMaNhanVien(),
 		        			SDTKhachHang.get(0).getSoDienThoai(),
-		        			5,
+		        			hoaDonDao.laySoLuongSanPhamTheoMaHoaDon(hoaDon.getMaHoaDon()),
 		        			hoaDon.getGiamGia(),
 		        			hoaDon.getTongTienHoaDon()
 		        	});

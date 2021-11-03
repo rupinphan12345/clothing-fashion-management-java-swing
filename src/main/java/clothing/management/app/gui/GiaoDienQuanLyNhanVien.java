@@ -29,7 +29,7 @@ public class GiaoDienQuanLyNhanVien extends JFrame {
     private JButton btnPrint;
 
     public GiaoDienQuanLyNhanVien() {
-        this.setTitle("Giao Diện Quản Lý Nhân Viên");
+        this.setTitle("Giao Diá»‡n Quáº£n LÃ½ NhÃ¢n ViÃªn");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -42,13 +42,13 @@ public class GiaoDienQuanLyNhanVien extends JFrame {
         JPanel header;
 
 
-        //Phần North
+        //Pháº§n North
         pn1 = new JPanel();
         head = new JPanel();
         head.setLayout(new FlowLayout(FlowLayout.RIGHT));
 //		head.setLayout(new FlowLayout(FlowLayout.LEFT));
         head.setPreferredSize(new Dimension(150, 50));
-        btnBack = new JButton("Quay lại");
+        btnBack = new JButton("Quay láº¡i");
         btnBack.setFont(new Font("Arial", Font.BOLD, 20));
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -64,7 +64,7 @@ public class GiaoDienQuanLyNhanVien extends JFrame {
         header = new JPanel();
         header.setLayout(new FlowLayout(FlowLayout.CENTER));
         header.setPreferredSize(new Dimension(1350, 90));
-        JLabel lblHeader = new JLabel("Quản Lý Nhân Viên");
+        JLabel lblHeader = new JLabel("Quáº£n LÃ½ NhÃ¢n ViÃªn");
         lblHeader.setFont(new Font("Arial", Font.BOLD, 70));
         header.add(lblHeader);
         pn1.add(header);
@@ -72,12 +72,12 @@ public class GiaoDienQuanLyNhanVien extends JFrame {
 // code  table
 
         pn2 = new JPanel();
-        pn2.setBorder(BorderFactory.createTitledBorder("Danh sách Nhân Viên"));
+        pn2.setBorder(BorderFactory.createTitledBorder("Danh sÃ¡ch NhÃ¢n ViÃªn"));
 
 //get table  fullScreen
         pn2.setLayout(new BoxLayout(pn2, BoxLayout.PAGE_AXIS));
 
-        String[] cols = {"Mã nhân viên", "Họ tên", "Số điện thoại", "Giới tính", "Email", "Ngày sinh", "CMND/CCCD"};
+        String[] cols = {"MÃ£ nhÃ¢n viÃªn", "Há»� tÃªn", "Sá»‘ Ä‘iá»‡n thoáº¡i", "Giá»›i tÃ­nh", "Email", "NgÃ y sinh", "CMND/CCCD"};
         dtm = new DefaultTableModel(cols, 0);
         table = new JTable(dtm);
         JScrollPane scroll = new JScrollPane(table);
@@ -88,22 +88,22 @@ public class GiaoDienQuanLyNhanVien extends JFrame {
 // code function
         pn3 = new JPanel();
         pn3.setPreferredSize(new Dimension(1500, 100));
-        pn3.setBorder(BorderFactory.createTitledBorder("các chức năng"));
+        pn3.setBorder(BorderFactory.createTitledBorder("cÃ¡c chá»©c nÄƒng"));
         pn3BL = new JPanel();
         pn3BL.setPreferredSize(new DimensionUIResource(1400, 50));
         pn3BL.setBorder(BorderFactory.createLoweredBevelBorder());
         cboFind = new JComboBox<String>();
         cboFind.setEditable(false);
-        cboFind.addItem("Chọn tiêu chí cần tìm");
-        cboFind.addItem("Tìm theo mã nhân viên");
-        cboFind.addItem("Tìm theo tên nhân viên");
-        cboFind.addItem("Tìm theo số điện thoại");
+        cboFind.addItem("Chá»�n tiÃªu chÃ­ cáº§n tÃ¬m");
+        cboFind.addItem("TÃ¬m theo mÃ£ nhÃ¢n viÃªn");
+        cboFind.addItem("TÃ¬m theo tÃªn nhÃ¢n viÃªn");
+        cboFind.addItem("TÃ¬m theo sá»‘ Ä‘iá»‡n thoáº¡i");
         txtFind = new JTextField(20);
-        JLabel lbFind = new JLabel("Tìm Kiếm theo:");
-        btnSearch = new JButton("Tìm Kiếm");
-        btnUpdate = new JButton("Cập Nhật");
-        btnDelete = new JButton("Xoá");
-        btnPrint = new JButton("Kết Xuất");
+        JLabel lbFind = new JLabel("TÃ¬m Kiáº¿m theo:");
+        btnSearch = new JButton("TÃ¬m Kiáº¿m");
+        btnUpdate = new JButton("Cáº­p Nháº­t");
+        btnDelete = new JButton("XoÃ¡");
+        btnPrint = new JButton("Káº¿t Xuáº¥t");
         pn3BL.add(txtFind);
         pn3BL.add(lbFind);
         pn3BL.add(cboFind);
